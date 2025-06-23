@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GroupPulse Check-In</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      color: #333;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    .emoji-grid, .reason-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .emoji-btn, .reason-btn {
+      padding: 10px 15px;
+      font-size: 24px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .emoji-btn:hover, .reason-btn:hover {
+      background: #f0f8ff;
+    }
+    .emoji-btn.selected, .reason-btn.selected {
+      background: #d0f0fd;
+      border-color: #1d9bf0;
+    }
+    .submit-btn {
+      display: block;
+      margin: 0 auto;
+      padding: 12px 20px;
+      font-size: 18px;
+      background-color: #1d9bf0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #responseBox {
+      margin-top: 30px;
+      background: #e3f6f5;
+      padding: 20px;
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 GroupPulse Check-In</h1>
+
+  <div class="section">
+    <h3>1. How are you feeling today?</h3>
+    <div class="emoji-grid" id="emojiGrid">
+      <button class="emoji-btn">😄</button>
+      <button class="emoji-btn">😊</button>
+      <button class="emoji-btn">😌</button>
+      <button class="emoji-btn">😐</button>
+      <button class="emoji-btn">😶</button>
+      <button class="emoji-btn">😞</button>
+      <button class="emoji-btn">😢</button>
+      <button class="emoji-btn">😰</button>
+      <button class="emoji-btn">😫</button>
+      <button class="emoji-btn">😤</button>
+      <button class="emoji-btn">😟</button>
+      <button class="emoji-btn">🫣</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>2. What's contributing to this feeling?</h3>
+    <div class="reason-grid" id="reasonGrid">
+      <button class="reason-btn">Family</button>
+      <button class="reason-btn">Friends</button>
+      <button class="reason-btn">Partner</button>
+      <button class="reason-btn">Loneliness</button>
+      <button class="reason-btn">Job</button>
+      <button class="reason-btn">Finances</button>
+      <button class="reason-btn">Burnout</button>
+      <button class="reason-btn">Body Image</button>
+      <button class="reason-btn">Health</button>
+      <button class="reason-btn">Addiction</button>
+      <button class="reason-btn">Safety</button>
+      <button class="reason-btn">Overthinking</button>
+    </div>
+  </div>
+
+  <button class="submit-btn" onclick="submitCheckIn()">Submit Check-In</button>
+
+  <div id="responseBox">
+    <h3>Your AI Reflection</h3>
+    <p><strong>💬 Message:</strong> <span id="aiMessage"></span></p>
+    <p><strong>🧘 Suggestion:</strong> <span id="aiSuggestion"></span></p>
+    <p><strong>💡 Affirmation:</strong> <span id="aiAffirmation"></span></p>
+  </div>
+
+  <script>
+    let selectedEmoji = null;
+    let selectedReasons = [];
+
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedEmoji = btn.textContent;
+      });
+    });
+
+    document.querySelectorAll('.reason-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('selected');
+        const reason = btn.textContent;
+        if (selectedReasons.includes(reason)) {
+          selectedReasons = selectedReasons.filter(r => r !== reason);
+        } else {
+          selectedReasons.push(reason);
+        }
+      });
+    });
+
+    async function submitCheckIn() {
+      if (!selectedEmoji) {
+        alert("Please select a mood emoji.");
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/gpt-checkin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mood: selectedEmoji,
+            reasons: selectedReasons
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById('aiMessage').textContent = data.aiMessage;
+          document.getElementById('aiSuggestion').textContent = data.aiSuggestion;
+          document.getElementById('aiAffirmation').textContent = data.aiAffirmation;
+          document.getElementById('responseBox').style.display = 'block';
+        } else {
+          alert("Error from server: " + (data.error || "Unknown error"));
+        }
+
+      } catch (err) {
+        alert("Failed to submit check-in. Please try again.");
+        console.error(err);
+      }
+    }
+  </script>
+
+</body>
+</html>

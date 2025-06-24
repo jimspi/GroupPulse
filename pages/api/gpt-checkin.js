@@ -1,4 +1,3 @@
-// FILE: pages/api/gpt-checkin.js
 import { Configuration, OpenAIApi } from 'openai';
 
 const configuration = new Configuration({
@@ -7,12 +6,12 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export default async function handler(req, res) {
-  // Handle GETs so the browser or probes don’t break your JSON parsing
+  // Gracefully handle GET requests
   if (req.method === 'GET') {
     return res.status(200).json({ aiMessage: '', aiSuggestion: '', aiAffirmation: '' });
   }
 
-  // Only allow POST for real check-ins
+  // Block any methods other than POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -51,4 +50,5 @@ Keep each response under 2 sentences.`
     return res.status(500).json({ error: 'Failed to generate response.' });
   }
 }
+
 

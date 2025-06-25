@@ -8,7 +8,7 @@ const openai = new OpenAI({
 
 // Airtable configuration from environment
 const AIRTABLE_BASE_ID    = process.env.AIRTABLE_BASE_ID;
-const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME; // e.g. 'GroupPulse'
+const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME; // e.g. 'Checkins'
 const AIRTABLE_ENDPOINT   = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
 
 export default async function handler(req, res) {

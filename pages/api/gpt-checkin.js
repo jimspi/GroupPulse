@@ -1,3 +1,4 @@
+```js
 // FILE: pages/api/gpt-checkin.js
 import OpenAI from 'openai';
 
@@ -68,23 +69,29 @@ export default async function handler(req, res) {
     const aiSuggestion  = lines[1] || '';
     const aiAffirmation = lines[2] || '';
 
-    // Save to Airtable (fire-and-forget)
-    fetch(AIRTABLE_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        fields: {
-          Mood:            mood,
-          Reasons:         reasons.join(', '),
-          'AI Message':      aiMessage,
-          'AI Suggestion':   aiSuggestion,
-          'AI Affirmation':  aiAffirmation
-        }
-      })
-    }).catch(err => console.error('Airtable error:', err));
+    // Save to Airtable and log response for debugging
+    try {
+      const airtableRes = await fetch(AIRTABLE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.AIRTABLE_TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fields: {
+            Mood:           mood,
+            Reasons:        reasons.join(', '),
+            'AI Message':      aiMessage,
+            'AI Suggestion':   aiSuggestion,
+            'AI Affirmation':  aiAffirmation
+          }
+        })
+      });
+      const airtableBody = await airtableRes.json();
+      console.log('Airtable write status:', airtableRes.status, airtableBody);
+    } catch (err) {
+      console.error('Airtable error:', err);
+    }
 
     // Return to client
     return res.status(200).json({ aiMessage, aiSuggestion, aiAffirmation });
@@ -93,6 +100,8 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to generate response.' });
   }
 }
+```
+
 
 
 

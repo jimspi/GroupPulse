@@ -58,8 +58,8 @@ export default function Home() {
     <>
       <div className="container">
         <header>
-          <h1>🧠 GroupPulse Check-In</h1>
-          <p className="subtitle">Share your mood. Get a supportive AI reflection.</p>
+          <h1> GroupPulse Check-In</h1>
+          <p className="subtitle">Share your mood. Get a supportive AI reflection, suggestion and affirmation.</p>
         </header>
 
         <div className="card">

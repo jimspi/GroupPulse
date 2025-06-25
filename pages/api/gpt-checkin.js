@@ -1,4 +1,3 @@
-```js
 // FILE: pages/api/gpt-checkin.js
 import OpenAI from 'openai';
 
@@ -100,7 +99,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to generate response.' });
   }
 }
-```
+
 
 
 

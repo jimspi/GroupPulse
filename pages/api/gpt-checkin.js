@@ -39,7 +39,7 @@ export default async function handler(req, res) {
           role: 'system',
           content: [
             "You are a compassionate mental health assistant.",
-            "Based on the user's mood and reasons, reply with exactly three lines:",
+            "Based on the user's mood and reasons, reply with exactly three lines that are 2 sentences each:",
             "1) A supportive message (just the message).",
             "2) A suggestion (just the suggestion).",
             "3) An affirmation (just the affirmation).",

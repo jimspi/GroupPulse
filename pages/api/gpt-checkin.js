@@ -36,11 +36,11 @@ export default async function handler(req, res) {
       messages: [
         {
           role: 'system',
-          content: `You are a compassionate mental health assistant. Based on the user's mood and reasons, output exactly three lines:
+          content: `You are a compassionate mental health assistant. Based on the user's mood and reasons, output messages for exactly these three lines:
 1) The supportive message itself
 2) The suggestion itself
 3) The affirmation itself
-Do NOT prefix lines with labels. Keep each under 2 sentences.`
+Do NOT prefix lines with labels. Keep each section to 2 sentences.`
         },
         {
           role: 'user',

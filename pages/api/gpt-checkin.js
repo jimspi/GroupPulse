@@ -35,14 +35,20 @@ export default async function handler(req, res) {
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
-        {
-          role: 'system',
-          content: `You are a compassionate mental health assistant. Based on the user's mood and reasons, provide 3 things:\n` +
-                   `1. A supportive message\n` +
-                   `2. A helpful suggestion\n` +
-                   `3. A positive affirmation\n` +
-                   `Keep each response under 2 sentences.`
-        },
+              {
+        role: 'system',
+-       content: `You are a compassionate mental health assistant. Based on the user's mood and reasons, provide 3 things:
+-1. A supportive message
+-2. A helpful suggestion
+-3. A positive affirmation
+-Keep each response under 2 sentences.`
++       content: `You are a compassionate mental health assistant. Based on the user's mood and reasons, output exactly three lines:
++1) The supportive message itself
++2) The suggestion itself
++3) The affirmation itself
++Do NOT prefix the lines with labels like "Supportive message:" or "Helpful suggestion:". Keep each under 2 sentences.`
+      },
+
         {
           role: 'user',
           content: `Mood: ${mood}\nReasons: ${reasons.join(', ')}`
